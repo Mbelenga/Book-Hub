@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .profile-icon {
+            float: right;
+            margin-right: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            float: right;
+            margin-right: 20px;
+        }
+
+        nav {
+            float: right;
+            margin-top: 10px;
+            margin-right: 20px;
+        }
+
+        .book-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .book {
+            background-color: #fff;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .book img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Book Hub</h1>
+            <div class="search-bar">
+                <form id="searchForm" method="POST">
+                    <input type="text" id="query" name="query" placeholder="Search for books" value="Python programming">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <div class="profile-icon" onclick="toggleAuthModal()">
+                <i class="fas fa-user-circle"></i>
+                <span class="tooltip">Log In / Sign Up</span>
+            </div>
+            <nav>
+                <a href="#home"><i class="fas fa-home"></i> Home</a>
+                <a href="categories.html" target="_blank"><i class="fas fa-th"></i> Categories</a>
+                <a href="#new-releases" target="_blank"><i class="fas fa-star"></i> New Releases</a>
+                <a href="reviews.html" target="_blank"><i class="fas fa-comment"></i> Reviews</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Welcome to Book Hub</h1>
+        </div>
+    </section>
+
+    <section class="book-list" id="bookList">
+        <!-- Book items will be dynamically inserted here -->
+    </section>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const query = document.getElementById('query').value;
+            fetchBooks(query);
+        });
+
+        function fetchBooks(query) {
+            const bookList = document.getElementById('bookList');
+            bookList.innerHTML = ''; // Clear previous search results
+
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                data.books.forEach(book => {
+                    const bookDiv = document.createElement('div');
+                    bookDiv.classList.add('book');
+                    bookDiv.innerHTML = `
+                        <h2>${book.title}</h2>
+                        <p>${book.authors.join(', ')}</p>
+                        <img src="${book.thumbnail}" alt="${book.title}">
+                        <p>${book.description}</p>
+                    `;
+                    bookList.appendChild(bookDiv);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
