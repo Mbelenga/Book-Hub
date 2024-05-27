@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from book_search import search_books, search_books_by_category
+from book_search import search_books, search_books_by_category, API_KEY
 
 app = Flask(__name__)
 
