@@ -7,26 +7,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        .profile-icon {
-            float: right;
-            margin-right: 20px;
-            position: relative;
-            cursor: pointer;
-        }
-        .search-bar {
-            float: right;
-            margin-right: 20px;
-        }
-        nav {
-            float: right;
-            margin-top: 10px;
-            margin-right: 20px;
-        }
         .book-list {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
+
         .book {
             background-color: #fff;
             margin: 20px;
@@ -37,10 +23,12 @@
             text-align: center;
             cursor: pointer;
         }
+
         .book img {
             max-width: 100%;
             height: auto;
         }
+
         .description {
             display: none;
         }
@@ -60,7 +48,7 @@
         {% for book in books %}
         <div class="book" onclick="toggleDescription(this)">
             <h2>{{ book.title }}</h2>
-            <p>{{ book.authors }}</p>
+            <p>{{ ', '.join(book.authors) }}</p>
             <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
             <div class="description">
                 <p>{{ book.description }}</p>
