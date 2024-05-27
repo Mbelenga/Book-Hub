@@ -20,3 +20,6 @@ def search_books(query):
     else:
         print(f'Error: {response.status_code}')
         return []
+def search_books_by_category(category):
+    query = f'subject:{category}'
+    return search_books(query)
