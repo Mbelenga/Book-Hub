@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Categories</title>
-    <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/categories.css') }}">
 </head>
 <body>
@@ -19,31 +18,31 @@
             <h2>Choose a Category</h2>
             <ul>
                 <li>
-                    <a href="index.html#mystery" target="_blank">
+                    <a href="{{ url_for('category', category_name='mystery') }}">
                         <img src="{{ url_for('static', filename='images/mystery.jpg') }}" alt="Mystery">
                         <span>Mystery</span>
                     </a>
                 </li>
                 <li>
-                    <a href="index.html#thriller" target="_blank">
+                    <a href="{{ url_for('category', category_name='thriller') }}">
                         <img src="{{ url_for('static', filename='images/thriller.jpg') }}" alt="Thriller">
                         <span>Thriller</span>
                     </a>
                 </li>
                 <li>
-                    <a href="index.html#adventure" target="_blank">
+                    <a href="{{ url_for('category', category_name='adventure') }}">
                         <img src="{{ url_for('static', filename='images/adventure.jpg') }}" alt="Adventure">
                         <span>Adventure</span>
                     </a>
                 </li>
                 <li>
-                    <a href="index.html#fantasy" target="_blank">
+                    <a href="{{ url_for('category', category_name='fantasy') }}">
                         <img src="{{ url_for('static', filename='images/fantasy.jpg') }}" alt="Fantasy">
                         <span>Fantasy</span>
                     </a>
                 </li>
                 <li>
-                    <a href="index.html#fiction" target="_blank">
+                    <a href="{{ url_for('category', category_name='fiction') }}">
                         <img src="{{ url_for('static', filename='images/fiction.jpg') }}" alt="Fiction">
                         <span>Fiction</span>
                     </a>
@@ -60,3 +59,4 @@
     </footer>
 </body>
 </html>
+

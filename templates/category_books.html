@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books in {{ category }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .profile-icon {
+            float: right;
+            margin-right: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            float: right;
+            margin-right: 20px;
+        }
+
+        nav {
+            float: right;
+            margin-top: 10px;
+            margin-right: 20px;
+        }
+
+        .book-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .book {
+            background-color: #fff;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .book img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Books in {{ category }}</h1>
+            <nav>
+                <a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('categories') }}"><i class="fas fa-th"></i> Categories</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="book-list">
+        {% for book in books %}
+        <div class="book">
+            <h2>{{ book.title }}</h2>
+            <p>{{ ', '.join(book.authors) }}</p>
+            <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
+            <p>{{ book.description }}</p>
+        </div>
+        {% endfor %}
+    </section>
+</body>
+</html>
