@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from book_search import search_books, search_books_by_category, API_KEY
+from book_search import search_books, search_books_by_category, get_books_from_gutenberg, download_book_from_gutenberg
 
 app = Flask(__name__)
 
@@ -13,15 +13,12 @@ def categories():
 
 @app.route('/category/<category_name>')
 def category(category_name):
-    books = search_books_by_category(category_name)
+    books = get_books_from_gutenberg()  # Replace this with actual category-based logic if needed
     formatted_books = [
         {
             "id": book['id'],
-            "title": book['volumeInfo'].get('title', 'No title available'),
-            "authors": book['volumeInfo'].get('authors', ['No authors available']),
-            "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
-            "description": book['volumeInfo'].get('description', 'No description available'),
-            "previewLink": book['volumeInfo'].get('previewLink', '')
+            "title": book['title'],
+            "author": book['author']
         }
         for book in books
     ]
@@ -29,23 +26,8 @@ def category(category_name):
 
 @app.route('/book/<book_id>')
 def book(book_id):
-    # Fetch book details by book_id if needed
-    params = {
-        'key': API_KEY
-    }
-    response = requests.get(f"{GOOGLE_BOOKS_API_URL}/{book_id}", params=params)
-    if response.status_code == 200:
-        book = response.json()
-        book_info = {
-            "title": book['volumeInfo'].get('title', 'No title available'),
-            "authors": book['volumeInfo'].get('authors', ['No authors available']),
-            "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
-            "description": book['volumeInfo'].get('description', 'No description available'),
-            "previewLink": book['volumeInfo'].get('previewLink', '')
-        }
-        return render_template('book.html', book=book_info)
-    else:
-        return "Error fetching book details", response.status_code
+    book_content = download_book_from_gutenberg(book_id)
+    return render_template('book.html', content=book_content)
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():

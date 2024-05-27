@@ -6,6 +6,8 @@ load_dotenv()  # Load environment variables from .env file
 
 API_KEY = os.getenv('API_KEY')
 GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes'
+OPEN_LIBRARY_SEARCH_URL = 'http://openlibrary.org/search.json'
+OPEN_LIBRARY_BOOK_URL = 'https://openlibrary.org/api/books'
 
 def search_books(query):
     params = {
@@ -25,8 +27,6 @@ def search_books_by_category(category):
     query = f'subject:{category}'
     return search_books(query)
 
-# Project Gutenberg Functions
-
 def get_books_from_gutenberg():
     # For simplicity, we'll use a static list of books from Project Gutenberg
     books = [
@@ -43,3 +43,30 @@ def download_book_from_gutenberg(book_id):
         return response.text
     else:
         return "Error: Could not retrieve the book content."
+
+def search_open_library(query):
+    params = {
+        'q': query
+    }
+    response = requests.get(OPEN_LIBRARY_SEARCH_URL, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        books = data.get('docs', [])
+        return books
+    else:
+        print(f'Error: {response.status_code}')
+        return []
+
+def get_open_library_book(book_id):
+    params = {
+        'bibkeys': f'OLID:{book_id}',
+        'format': 'json',
+        'jscmd': 'data'
+    }
+    response = requests.get(OPEN_LIBRARY_BOOK_URL, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        book_key = f'OLID:{book_id}'
+        if book_key in data:
+            return data[book_key]
+    return None
