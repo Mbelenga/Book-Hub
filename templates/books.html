@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>{{ book.title }}</h1>
+            <nav>
+                <a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('categories') }}"><i class="fas fa-th"></i> Categories</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="book-detail">
+        <div class="container">
+            <h2>{{ book.title }}</h2>
+            <p>Authors: {{ ', '.join(book.authors) }}</p>
+            <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
+            <p>{{ book.description }}</p>
+            {% if book.previewLink %}
+                <a href="{{ book.previewLink }}" target="_blank">Read Preview</a>
+            {% else %}
+                <p>No preview available.</p>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>
