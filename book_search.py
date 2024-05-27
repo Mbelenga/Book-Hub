@@ -4,10 +4,11 @@ import os
 
 load_dotenv()  # Load environment variables from .env file
 
-API_KEY = os.getenv('API_KEY')
 GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes'
-OPEN_LIBRARY_SEARCH_URL = 'http://openlibrary.org/search.json'
-OPEN_LIBRARY_BOOK_URL = 'https://openlibrary.org/api/books'
+OPEN_LIBRARY_API_URL = 'https://openlibrary.org/api/books'
+PROJECT_GUTENBERG_URL = 'http://gutenberg.org/ebooks/'
+
+API_KEY = os.getenv('API_KEY')
 
 def search_books(query):
     params = {
@@ -18,7 +19,7 @@ def search_books(query):
     if response.status_code == 200:
         data = response.json()
         books = data.get('items', [])
-        return books
+        return format_books(books)
     else:
         print(f'Error: {response.status_code}')
         return []
@@ -27,46 +28,42 @@ def search_books_by_category(category):
     query = f'subject:{category}'
     return search_books(query)
 
-def get_books_from_gutenberg():
-    # For simplicity, we'll use a static list of books from Project Gutenberg
-    books = [
-        {'id': '84', 'title': 'Frankenstein', 'author': 'Mary Shelley'},
-        {'id': '1342', 'title': 'Pride and Prejudice', 'author': 'Jane Austen'},
-        {'id': '11', 'title': 'Alice\'s Adventures in Wonderland', 'author': 'Lewis Carroll'}
-    ]
-    return books
+def get_new_releases():
+    # Implement fetching new releases (this can be an API call to Google Books, Open Library, etc.)
+    return []
 
-def download_book_from_gutenberg(book_id):
-    book_url = f'https://www.gutenberg.org/files/{book_id}/{book_id}-0.txt'
-    response = requests.get(book_url)
-    if response.status_code == 200:
-        return response.text
-    else:
-        return "Error: Could not retrieve the book content."
-
-def search_open_library(query):
-    params = {
-        'q': query
-    }
-    response = requests.get(OPEN_LIBRARY_SEARCH_URL, params=params)
+def get_book_details(book_id):
+    url = f'{GOOGLE_BOOKS_API_URL}/{book_id}'
+    response = requests.get(url, params={'key': API_KEY})
     if response.status_code == 200:
         data = response.json()
-        books = data.get('docs', [])
-        return books
+        return format_book(data)
     else:
         print(f'Error: {response.status_code}')
-        return []
+        return None
 
-def get_open_library_book(book_id):
-    params = {
-        'bibkeys': f'OLID:{book_id}',
-        'format': 'json',
-        'jscmd': 'data'
+def format_books(items):
+    books = []
+    for item in items:
+        book = format_book(item)
+        books.append(book)
+    return books
+
+def format_book(item):
+    volume_info = item.get('volumeInfo', {})
+    return {
+        'id': item.get('id'),
+        'title': volume_info.get('title'),
+        'authors': volume_info.get('authors', []),
+        'thumbnail': volume_info.get('imageLinks', {}).get('thumbnail'),
+        'description': volume_info.get('description', ''),
+        'previewLink': volume_info.get('previewLink')
     }
-    response = requests.get(OPEN_LIBRARY_BOOK_URL, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        book_key = f'OLID:{book_id}'
-        if book_key in data:
-            return data[book_key]
-    return None
+
+def get_books_from_gutenberg():
+    # Implement the logic to fetch books from Project Gutenberg
+    return []
+
+def download_book_from_gutenberg(book_id):
+    # Implement the logic to download the book content from Project Gutenberg
+    return ""
