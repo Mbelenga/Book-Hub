@@ -16,14 +16,36 @@ def category(category_name):
     books = search_books_by_category(category_name)
     formatted_books = [
         {
+            "id": book['id'],
             "title": book['volumeInfo'].get('title', 'No title available'),
             "authors": book['volumeInfo'].get('authors', ['No authors available']),
             "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
-            "description": book['volumeInfo'].get('description', 'No description available')
+            "description": book['volumeInfo'].get('description', 'No description available'),
+            "previewLink": book['volumeInfo'].get('previewLink', '')
         }
         for book in books
     ]
     return render_template('category_books.html', books=formatted_books, category=category_name)
+
+@app.route('/book/<book_id>')
+def book(book_id):
+    # Fetch book details by book_id if needed
+    params = {
+        'key': API_KEY
+    }
+    response = requests.get(f"{GOOGLE_BOOKS_API_URL}/{book_id}", params=params)
+    if response.status_code == 200:
+        book = response.json()
+        book_info = {
+            "title": book['volumeInfo'].get('title', 'No title available'),
+            "authors": book['volumeInfo'].get('authors', ['No authors available']),
+            "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
+            "description": book['volumeInfo'].get('description', 'No description available'),
+            "previewLink": book['volumeInfo'].get('previewLink', '')
+        }
+        return render_template('book.html', book=book_info)
+    else:
+        return "Error fetching book details", response.status_code
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
@@ -41,10 +63,12 @@ def search():
     books = search_books(query)
     formatted_books = [
         {
+            "id": book['id'],
             "title": book['volumeInfo'].get('title', 'No title available'),
             "authors": book['volumeInfo'].get('authors', ['No authors available']),
             "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
-            "description": book['volumeInfo'].get('description', 'No description available')
+            "description": book['volumeInfo'].get('description', 'No description available'),
+            "previewLink": book['volumeInfo'].get('previewLink', '')
         }
         for book in books
     ]
