@@ -45,6 +45,10 @@
             max-width: 100%;
             height: auto;
         }
+
+        .description {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -64,10 +68,25 @@
             <h2>{{ book.title }}</h2>
             <p>{{ ', '.join(book.authors) }}</p>
             <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
-            <p>{{ book.description }}</p>
-            <a href="{{ url_for('book', book_id=book.id) }}">Read more</a>
+            <p class="description">{{ book.description }}</p>
+            <button onclick="toggleDescription(this)">Show Description</button>
+            <a href="{{ book.previewLink }}" target="_blank">Read</a>
         </div>
         {% endfor %}
     </section>
+
+    <script>
+        function toggleDescription(button) {
+            const description = button.previousElementSibling;
+            if (description.style.display === 'none' || description.style.display === '') {
+                description.style.display = 'block';
+                button.textContent = 'Hide Description';
+            } else {
+                description.style.display = 'none';
+                button.textContent = 'Show Description';
+            }
+        }
+    </script>
 </body>
 </html>
+
