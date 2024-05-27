@@ -4,6 +4,9 @@ import os
 
 load_dotenv()  # Load environment variables from .env file
 
+# Print out API_KEY to verify it's loaded correctly
+print(API_KEY)
+
 API_KEY = os.getenv('API_KEY')
 GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes'
 
