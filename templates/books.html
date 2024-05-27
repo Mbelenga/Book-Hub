@@ -15,19 +15,6 @@
             max-width: 300px;
             height: auto;
         }
-        .reviews-section {
-            margin: 20px;
-        }
-        .review-form {
-            margin: 20px 0;
-        }
-        .review {
-            border-top: 1px solid #ddd;
-            padding: 10px 0;
-        }
-        .rating {
-            color: gold;
-        }
     </style>
 </head>
 <body>
@@ -51,36 +38,6 @@
             {% else %}
                 <p>No preview available.</p>
             {% endif %}
-        </div>
-    </section>
-    <section class="reviews-section">
-        <div class="container">
-            <h3>Reviews</h3>
-            <form class="review-form" action="{{ url_for('reviews') }}" method="post">
-                <input type="hidden" name="book_id" value="{{ book.id }}">
-                <label for="user_name">Name:</label>
-                <input type="text" id="user_name" name="user_name" required>
-                <label for="rating">Rating:</label>
-                <select id="rating" name="rating" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <label for="comment">Comment:</label>
-                <textarea id="comment" name="comment" rows="4" required></textarea>
-                <button type="submit">Submit Review</button>
-            </form>
-            <div class="reviews">
-                {% for review in reviews %}
-                <div class="review">
-                    <p><strong>{{ review[0] }}</strong></p>
-                    <p class="rating">{{ '★' * review[1] }}</p>
-                    <p>{{ review[2] }}</p>
-                </div>
-                {% endfor %}
-            </div>
         </div>
     </section>
 </body>
