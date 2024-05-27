@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from book_search import search_books
 
 app = Flask(__name__)
 
@@ -22,17 +23,17 @@ def reviews():
 
 @app.route('/search', methods=['POST'])
 def search():
-    # This is a placeholder for your search function
     query = request.json.get('query')
-    books = [
-        {
-            "title": "Sample Book",
-            "authors": ["Author Name"],
-            "thumbnail": "/static/images/sample.jpg",
-            "description": "Sample description of the book."
-        },
-        # Add more book entries here
-    ]
+    books_data = search_books(query)
+    books = []
+    for book in books_data:
+        volume_info = book['volumeInfo']
+        books.append({
+            "title": volume_info.get('title', 'No title available'),
+            "authors": volume_info.get('authors', ['No authors available']),
+            "thumbnail": volume_info.get('imageLinks', {}).get('thumbnail', ''),
+            "description": volume_info.get('description', 'No description available')
+        })
     return jsonify(books=books)
 
 if __name__ == '__main__':
