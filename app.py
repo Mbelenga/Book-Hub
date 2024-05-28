@@ -6,7 +6,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('user.html')
+    new_releases = get_new_releases()
+    return render_template('user.html', new_releases=new_releases)
 
 @app.route('/categories')
 def categories():
@@ -20,41 +21,25 @@ def category(category_name):
 @app.route('/book/<book_id>')
 def book(book_id):
     book_details = get_book_details(book_id)
-    return render_template('book.html', book=book_details)
+    reviews = get_reviews(book_id)
+    return render_template('book.html', book=book_details, reviews=reviews)
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
     if request.method == 'POST':
-        book_title = request.form['book-title']
+        book_id = request.form['book_id']
+        book_title = request.form['book_title']
         rating = request.form['rating']
         review = request.form['review']
-        # Save the review to the database
-        save_review(book_title, rating, review)
-        return redirect(url_for('reviews'))
-    reviews = get_reviews()
-    return render_template('reviews.html', reviews=reviews)
+        save_review(book_id, book_title, rating, review)
+        return redirect(url_for('book', book_id=book_id))
+    return render_template('reviews.html')
 
 @app.route('/search', methods=['POST'])
 def search():
     query = request.json.get('query')
     books = search_books(query)
-    formatted_books = [
-        {
-            "id": book['id'],
-            "title": book['volumeInfo'].get('title', 'No title available'),
-            "authors": book['volumeInfo'].get('authors', ['No authors available']),
-            "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
-            "description": book['volumeInfo'].get('description', 'No description available'),
-            "previewLink": book['volumeInfo'].get('previewLink', '')
-        }
-        for book in books
-    ]
-    return jsonify(books=formatted_books)
-
-@app.route('/new-releases')
-def new_releases():
-    releases = get_new_releases()
-    return render_template('new_releases.html', releases=releases)
+    return jsonify(books=books)
 
 if __name__ == '__main__':
     app.run(debug=True)
