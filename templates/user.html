@@ -7,6 +7,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        .profile-icon {
+            float: right;
+            margin-right: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            float: right;
+            margin-right: 20px;
+        }
+
+        nav {
+            float: right;
+            margin-top: 10px;
+            margin-right: 20px;
+        }
+
         .book-list {
             display: flex;
             flex-wrap: wrap;
@@ -21,7 +39,6 @@
             max-width: 200px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            cursor: pointer;
         }
 
         .book img {
@@ -29,8 +46,15 @@
             height: auto;
         }
 
-        .description {
+        .book-description {
             display: none;
+        }
+
+        .new-releases {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -57,8 +81,32 @@
         </div>
     </header>
 
+    <section class="hero">
+        <div class="container">
+            <h1>Welcome to Book Hub</h1>
+        </div>
+    </section>
+
     <section class="book-list" id="bookList">
         <!-- Book items will be dynamically inserted here -->
+    </section>
+
+    <section class="new-releases" id="new-releases">
+        <h2>New Releases</h2>
+        <div class="book-list">
+            {% for book in new_releases %}
+            <div class="book">
+                <h2>{{ book.title }}</h2>
+                <p>{{ ', '.join(book.authors) }}</p>
+                <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
+                <button onclick="toggleDescription('{{ book.id }}')">More Info</button>
+                <div class="book-description" id="desc-{{ book.id }}">
+                    <p>{{ book.description }}</p>
+                    <a href="{{ book.previewLink }}" target="_blank">Read Preview</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </section>
 
     <script>
@@ -83,23 +131,26 @@
             .then(data => {
                 data.books.forEach(book => {
                     const bookDiv = document.createElement('div');
-                    bookDiv.classList.add('book');
+                    bookDiv.className = 'book';
                     bookDiv.innerHTML = `
                         <h2>${book.title}</h2>
                         <p>${book.authors.join(', ')}</p>
                         <img src="${book.thumbnail}" alt="${book.title}">
-                        <div class="description">
+                        <button onclick="toggleDescription('${book.id}')">More Info</button>
+                        <div class="book-description" id="desc-${book.id}">
                             <p>${book.description}</p>
                             <a href="${book.previewLink}" target="_blank">Read Preview</a>
                         </div>
                     `;
-                    bookDiv.addEventListener('click', () => {
-                        const description = bookDiv.querySelector('.description');
-                        description.style.display = description.style.display === 'block' ? 'none' : 'block';
-                    });
                     bookList.appendChild(bookDiv);
                 });
-            });
+            })
+            .catch(error => console.error('Error fetching books:', error));
+        }
+
+        function toggleDescription(bookId) {
+            const desc = document.getElementById(`desc-${bookId}`);
+            desc.style.display = desc.style.display === 'none' ? 'block' : 'none';
         }
     </script>
 </body>
