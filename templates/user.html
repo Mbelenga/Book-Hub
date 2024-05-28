@@ -49,13 +49,6 @@
         .book-description {
             display: none;
         }
-
-        .new-releases {
-            margin: 20px;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 <body>
@@ -67,15 +60,11 @@
                     <input type="text" id="query" name="query" placeholder="Search for books">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
-            </div>
-            <div class="profile-icon" onclick="toggleAuthModal()">
-                <i class="fas fa-user-circle"></i>
-                <span class="tooltip">Log In / Sign Up</span>
-            </div>
+	    <!-- <div class="profile-icon" onclick="toggleAuthModal()">-->
+	    <!-- <i class="fas fa-user-circle"></i> -->
+		<!-- <span class="tooltip">Log In / Sign Up</span> -->
             <nav>
-                <a href="#home"><i class="fas fa-home"></i> Home</a>
                 <a href="{{ url_for('categories') }}"><i class="fas fa-th"></i> Categories</a>
-                <a href="#new-releases"><i class="fas fa-star"></i> New Releases</a>
                 <a href="{{ url_for('reviews') }}"><i class="fas fa-comment"></i> Reviews</a>
             </nav>
         </div>
@@ -90,25 +79,6 @@
     <section class="book-list" id="bookList">
         <!-- Book items will be dynamically inserted here -->
     </section>
-
-    <section class="new-releases" id="new-releases">
-        <h2>New Releases</h2>
-        <div class="book-list">
-            {% for book in new_releases %}
-            <div class="book">
-                <h2>{{ book.title }}</h2>
-                <p>{{ ', '.join(book.authors) }}</p>
-                <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
-                <button onclick="toggleDescription('{{ book.id }}')">More Info</button>
-                <div class="book-description" id="desc-{{ book.id }}">
-                    <p>{{ book.description }}</p>
-                    <a href="{{ book.previewLink }}" target="_blank">Read Preview</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-
     <script>
         document.getElementById('searchForm').addEventListener('submit', function(event) {
             event.preventDefault();
