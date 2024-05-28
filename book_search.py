@@ -1,69 +1,75 @@
 import requests
-from dotenv import load_dotenv
 import os
 
-load_dotenv()  # Load environment variables from .env file
-
 GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes'
-OPEN_LIBRARY_API_URL = 'https://openlibrary.org/api/books'
-PROJECT_GUTENBERG_URL = 'http://gutenberg.org/ebooks/'
-
-API_KEY = os.getenv('API_KEY')
+OPEN_LIBRARY_API_URL = 'http://openlibrary.org/search.json'
+GUTENBERG_API_URL = 'https://gutenberg.org/ebooks/'
 
 def search_books(query):
-    params = {
-        'q': query,
-        'key': API_KEY
-    }
+    google_books = search_google_books(query)
+    open_library_books = search_open_library(query)
+    gutenberg_books = search_gutenberg_books(query)
+    return google_books + open_library_books + gutenberg_books
+
+def search_google_books(query):
+    params = {'q': query, 'key': os.getenv('GOOGLE_API_KEY')}
     response = requests.get(GOOGLE_BOOKS_API_URL, params=params)
     if response.status_code == 200:
         data = response.json()
-        books = data.get('items', [])
-        return format_books(books)
-    else:
-        print(f'Error: {response.status_code}')
-        return []
+        books = [
+            {
+                "id": book['id'],
+                "title": book['volumeInfo'].get('title', 'No title available'),
+                "authors": book['volumeInfo'].get('authors', ['No authors available']),
+                "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
+                "description": book['volumeInfo'].get('description', 'No description available'),
+                "previewLink": book['volumeInfo'].get('previewLink', '')
+            }
+            for book in data.get('items', [])
+        ]
+        return books
+    return []
 
-def search_books_by_category(category):
-    query = f'subject:{category}'
-    return search_books(query)
+def search_open_library(query):
+    response = requests.get(OPEN_LIBRARY_API_URL, params={'q': query})
+    if response.status_code == 200:
+        data = response.json()
+        books = [
+            {
+                "id": book['key'].split('/')[-1],
+                "title": book.get('title', 'No title available'),
+                "authors": [author['name'] for author in book.get('author_name', [])],
+                "thumbnail": '',
+                "description": book.get('first_sentence', 'No description available'),
+                "previewLink": f"https://openlibrary.org{book['key']}"
+            }
+            for book in data.get('docs', [])
+        ]
+        return books
+    return []
 
-def get_new_releases():
-    # Implement fetching new releases (this can be an API call to Google Books, Open Library, etc.)
+def search_gutenberg_books(query):
+    response = requests.get(GUTENBERG_API_URL, params={'query': query})
+    if response.status_code == 200:
+        data = response.json()
+        books = [
+            {
+                "id": book['id'],
+                "title": book.get('title', 'No title available'),
+                "authors": [author['name'] for author in book.get('authors', [])],
+                "thumbnail": '',
+                "description": book.get('download_count', 'No description available'),
+                "previewLink": f"https://gutenberg.org/ebooks/{book['id']}"
+            }
+            for book in data.get('results', [])
+        ]
+        return books
     return []
 
 def get_book_details(book_id):
-    url = f'{GOOGLE_BOOKS_API_URL}/{book_id}'
-    response = requests.get(url, params={'key': API_KEY})
-    if response.status_code == 200:
-        data = response.json()
-        return format_book(data)
-    else:
-        print(f'Error: {response.status_code}')
-        return None
+    # Implement fetching book details from the appropriate source
+    pass
 
-def format_books(items):
-    books = []
-    for item in items:
-        book = format_book(item)
-        books.append(book)
-    return books
-
-def format_book(item):
-    volume_info = item.get('volumeInfo', {})
-    return {
-        'id': item.get('id'),
-        'title': volume_info.get('title'),
-        'authors': volume_info.get('authors', []),
-        'thumbnail': volume_info.get('imageLinks', {}).get('thumbnail'),
-        'description': volume_info.get('description', ''),
-        'previewLink': volume_info.get('previewLink')
-    }
-
-def get_books_from_gutenberg():
-    # Implement the logic to fetch books from Project Gutenberg
-    return []
-
-def download_book_from_gutenberg(book_id):
-    # Implement the logic to download the book content from Project Gutenberg
-    return ""
+def get_new_releases():
+    # Implement fetching new releases
+    pass
