@@ -55,3 +55,7 @@ def download_book_from_gutenberg(book_id):
     if response.status_code == 200:
         return response.text
     return "Book content could not be retrieved."
+
+def search_books_by_category(category):
+    query = f'subject:{category}'
+    return search_books(query)
