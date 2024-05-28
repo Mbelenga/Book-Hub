@@ -1,10 +1,8 @@
-/* review.css */
-
-/* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
 }
 
 .container {
@@ -13,10 +11,11 @@ body {
 }
 
 header {
-    background-color: #333;
+    background: #333;
     color: #fff;
-    padding: 20px 0;
-    text-align: center;
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: #0779e4 solid 3px
 }
 
 header h1 {
@@ -79,4 +78,15 @@ nav a {
 
 .rating {
     color: gold;
+}
+
+.hero {
+    background: url('https://images.unsplash.com/photo-1508394522741-82ac9c15ba69?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Ym9vayUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D') no-repeat center center/cover;
+    color: #fff;
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
 }
