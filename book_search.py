@@ -1,75 +1,31 @@
 import requests
-import os
 
-GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes'
-OPEN_LIBRARY_API_URL = 'http://openlibrary.org/search.json'
-GUTENBERG_API_URL = 'https://gutenberg.org/ebooks/'
+GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes"
+OPEN_LIBRARY_SEARCH_URL = "http://openlibrary.org/search.json"
+GUTENBERG_API_URL = "http://gutendex.com/books"
 
 def search_books(query):
-    google_books = search_google_books(query)
-    open_library_books = search_open_library(query)
-    gutenberg_books = search_gutenberg_books(query)
-    return google_books + open_library_books + gutenberg_books
+    response = requests.get(GOOGLE_BOOKS_API_URL, params={'q': query})
+    return response.json().get('items', [])
 
-def search_google_books(query):
-    params = {'q': query, 'key': os.getenv('GOOGLE_API_KEY')}
-    response = requests.get(GOOGLE_BOOKS_API_URL, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        books = [
-            {
-                "id": book['id'],
-                "title": book['volumeInfo'].get('title', 'No title available'),
-                "authors": book['volumeInfo'].get('authors', ['No authors available']),
-                "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
-                "description": book['volumeInfo'].get('description', 'No description available'),
-                "previewLink": book['volumeInfo'].get('previewLink', '')
-            }
-            for book in data.get('items', [])
-        ]
-        return books
-    return []
-
-def search_open_library(query):
-    response = requests.get(OPEN_LIBRARY_API_URL, params={'q': query})
-    if response.status_code == 200:
-        data = response.json()
-        books = [
-            {
-                "id": book['key'].split('/')[-1],
-                "title": book.get('title', 'No title available'),
-                "authors": [author['name'] for author in book.get('author_name', [])],
-                "thumbnail": '',
-                "description": book.get('first_sentence', 'No description available'),
-                "previewLink": f"https://openlibrary.org{book['key']}"
-            }
-            for book in data.get('docs', [])
-        ]
-        return books
-    return []
-
-def search_gutenberg_books(query):
-    response = requests.get(GUTENBERG_API_URL, params={'query': query})
-    if response.status_code == 200:
-        data = response.json()
-        books = [
-            {
-                "id": book['id'],
-                "title": book.get('title', 'No title available'),
-                "authors": [author['name'] for author in book.get('authors', [])],
-                "thumbnail": '',
-                "description": book.get('download_count', 'No description available'),
-                "previewLink": f"https://gutenberg.org/ebooks/{book['id']}"
-            }
-            for book in data.get('results', [])
-        ]
-        return books
-    return []
-
-def get_book_details(book_id):
-    # Implement fetching book details from the appropriate source
-    pass
+def search_books_by_category(category):
+    # Implement category search logic if available for Google Books, Open Library, or Project Gutenberg
+    response = requests.get(OPEN_LIBRARY_SEARCH_URL, params={'subject': category})
+    return response.json().get('docs', [])
 
 def get_new_releases():
-    # Implement fetching new releases
-    pass
+    # Implement new releases fetch logic if available from any source
+    response = requests.get(GOOGLE_BOOKS_API_URL, params={'orderBy': 'newest'})
+    return response.json().get('items', [])
+
+def get_book_details(book_id):
+    response = requests.get(f"{GOOGLE_BOOKS_API_URL}/{book_id}")
+    return response.json()
+
+def get_books_from_gutenberg():
+    response = requests.get(GUTENBERG_API_URL)
+    return response.json().get('results', [])
+
+def download_book_from_gutenberg(book_id):
+    response = requests.get(f"{GUTENBERG_API_URL}/{book_id}")
+    return response.json()
