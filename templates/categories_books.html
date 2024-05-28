@@ -7,6 +7,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        .profile-icon {
+            float: right;
+            margin-right: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            float: right;
+            margin-right: 20px;
+        }
+
+        nav {
+            float: right;
+            margin-top: 10px;
+            margin-right: 20px;
+        }
+
         .book-list {
             display: flex;
             flex-wrap: wrap;
@@ -21,16 +39,11 @@
             max-width: 200px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            cursor: pointer;
         }
 
         .book img {
             max-width: 100%;
             height: auto;
-        }
-
-        .description {
-            display: none;
         }
     </style>
 </head>
@@ -44,24 +57,16 @@
             </nav>
         </div>
     </header>
+
     <section class="book-list">
         {% for book in books %}
-        <div class="book" onclick="toggleDescription(this)">
+        <div class="book">
             <h2>{{ book.title }}</h2>
             <p>{{ ', '.join(book.authors) }}</p>
             <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
-            <div class="description">
-                <p>{{ book.description }}</p>
-                <a href="{{ book.previewLink }}" target="_blank">Read Preview</a>
-            </div>
+            <p>{{ book.description }}</p>
         </div>
         {% endfor %}
     </section>
-    <script>
-        function toggleDescription(bookElement) {
-            const description = bookElement.querySelector('.description');
-            description.style.display = description.style.display === 'block' ? 'none' : 'block';
-        }
-    </script>
 </body>
 </html>
