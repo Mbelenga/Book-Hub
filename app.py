@@ -28,9 +28,12 @@ def category(category_name):
     books = search_books_by_category(category_name)
     formatted_books = [
         {
-            "id": book['key'].split('/')[-1],
+            "id": book['id'],
             "title": book['title'],
-            "author": book.get('author_name', ['Unknown'])[0]
+            "authors": book.get('author_name', ['Unknown']),
+            "thumbnail": book.get('cover', {}).get('medium', ''),
+            "description": book.get('description', 'No description available'),
+            "previewLink": f"https://openlibrary.org{book['key']}"
         }
         for book in books
     ]
