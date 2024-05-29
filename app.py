@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from book_search import search_books, search_books_by_category
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
