@@ -68,10 +68,17 @@
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>
-            <div class="profile-icon" onclick="toggleAuthModal()">
+	    <div class="search-bar">
+    		<form id="searchForm" method="POST">
+        	    <input type="text" id="query" name="query" placeholder="Search for books">
+        	    <button type="submit"><i class="fas fa-search"></i></button>
+    		</form>
+	   </div>
+
+           <!-- <div class="profile-icon" onclick="toggleAuthModal()">
                 <i class="fas fa-user-circle"></i>
                 <span class="tooltip">Log In / Sign Up</span>
-            </div>
+	   </div> -->
             <nav>
                 <a href="{{ url_for('categories') }}"><i class="fas fa-th"></i> Categories</a>
                 <a href="{{ url_for('reviews') }}"><i class="fas fa-comment"></i> Reviews</a>
