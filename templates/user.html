@@ -73,9 +73,7 @@
                 <span class="tooltip">Log In / Sign Up</span>
             </div>
             <nav>
-                <a href="#home"><i class="fas fa-home"></i> Home</a>
                 <a href="{{ url_for('categories') }}"><i class="fas fa-th"></i> Categories</a>
-                <a href="#new-releases"><i class="fas fa-star"></i> New Releases</a>
                 <a href="{{ url_for('reviews') }}"><i class="fas fa-comment"></i> Reviews</a>
             </nav>
         </div>
@@ -91,7 +89,7 @@
         <!-- Book items will be dynamically inserted here -->
     </section>
 
-    <section class="new-releases" id="new-releases">
+   <!-- <section class="new-releases" id="new-releases">
         <h2>New Releases</h2>
         <div class="book-list">
             {% for book in new_releases %}
@@ -107,7 +105,7 @@
             </div>
             {% endfor %}
         </div>
-    </section>
+   </section> -->
 
     <script>
         document.getElementById('searchForm').addEventListener('submit', function(event) {
