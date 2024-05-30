@@ -27,6 +27,10 @@ with app.app_context():
 def home():
     return render_template('user.html')
 
+@app.route('/modern')
+def modern():
+    return render_template('modern.html')
+
 @app.route('/categories')
 def categories():
     return render_template('categories.html')
@@ -70,6 +74,8 @@ def search():
         for book in books
     ]
     return jsonify(books=formatted_books)
+
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
