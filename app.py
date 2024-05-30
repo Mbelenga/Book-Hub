@@ -39,7 +39,7 @@ def category(category_name):
             "title": book['volumeInfo'].get('title', 'No title available'),
             "authors": book['volumeInfo'].get('authors', ['No authors available']),
             "thumbnail": book['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
-            "description": book['volumeInfo'].get('description', 'No description available')
+            "description": book['volumeInfo'].get('description', 'No description available'),
             "previewLink": book['volumeInfo'].get('previewLink', '')
         }
         for book in books
