@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Reviews</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://media.istockphoto.com/id/1451079337/photo/customer-review-good-rating-concept-hand-pressing-user-and-five-star-icon-on-visual-screen.jpg?s=1024x1024&w=is&k=20&c=QPAM1YxTn6I8Qwp90manpa0ikNcuMEqfLC4Zs0j37qQ=">
     <style>
         .review-form {
             margin: 20px;
@@ -26,6 +26,7 @@
             <nav>
                 <a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
                 <a href="{{ url_for('categories') }}"><i class="fas fa-th"></i> Categories</a>
+                <a href="{{ url_for('my_reviews') }}"><i class="fas fa-th"></i> My Reviews</a>
             </nav>
         </div>
     </header>
@@ -48,5 +49,29 @@
             </form>
         </div>
     </section>
+    <body>
+        <h1>Reviews</h1>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form action="{{ url_for('submit_review') }}" method="POST">
+            <textarea name="review" placeholder="Write your review here..."></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    
+        <h2>All Reviews</h2>
+        <ul>
+            {% for review in reviews %}
+                <li>{{ review['timestamp'] }} - {{ review['review'] }}</li>
+            {% endfor %}
+        </ul>
 </body>
 </html>

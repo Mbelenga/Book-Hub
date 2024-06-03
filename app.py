@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+import sqlite3
 
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -55,15 +56,41 @@ def category(category_name):
     ]
     return render_template('category_books.html', books=formatted_books, category=category_name)
 
-@app.route('/reviews', methods=['GET', 'POST'])
+def get_db_connection():
+    conn = sqlite3.connect('bookhub.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+@app.route('/reviews')
 def reviews():
-    if request.method == 'POST':
-        book_title = request.form['book-title']
-        rating = request.form['rating']
-        review = request.form['review']
-        # Process the form data here (e.g., save it to a database)
-        return redirect(url_for('reviews'))
-    return render_template('reviews.html')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM reviews')
+    reviews = cursor.fetchall()
+    conn.close()
+    return render_template('reviews.html', reviews=reviews)
+
+@app.route('/submit_review', methods=['POST'])
+def submit_review():
+    review_content = request.form['review']
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO reviews (review) VALUES (?)', (review_content,))
+    conn.commit()
+    conn.close()
+    
+    flash('Review submitted successfully!')
+    return redirect(url_for('reviews'))
+
+@app.route('/my_reviews')
+def my_reviews():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM reviews')
+    my_reviews = cursor.fetchall()
+    conn.close()
+    return render_template('my_reviews.html', reviews=my_reviews)
 
 @app.route('/search', methods=['POST'])
 def search():

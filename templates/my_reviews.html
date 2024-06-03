@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Reviews</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .flash-message {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #d4d4d4;
+            border-radius: 5px;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Reviews</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h2>Your Submitted Reviews</h2>
+    <ul>
+        {% for review in reviews %}
+            <li>{{ review['timestamp'] }} - {{ review['review'] }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('reviews') }}">Back to All Reviews</a>
+</body>
+</html>
