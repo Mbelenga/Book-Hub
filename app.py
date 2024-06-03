@@ -77,15 +77,6 @@ def reviews():
         conn.close()
         return render_template('reviews.html', reviews=reviews)
 
-@app.route('/my_reviews')
-def my_reviews():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM reviews')
-    my_reviews = cursor.fetchall()
-    conn.close()
-    return render_template('my_reviews.html', reviews=my_reviews)
-
 @app.route('/search', methods=['POST'])
 def search():
     query = request.json.get('query')
