@@ -61,12 +61,12 @@ def category(category_name):
     return render_template('category_books.html', books=formatted_books, category=category_name)
 
 def get_db_connection():
-    conn = sqlite3.connect('bookhub.db')
+    conn = sqlite3.connect('init.db')
     conn.row_factory = sqlite3.Row
     return conn
 
 def init_db():
-    conn = sqlite3.connect('bookhub.db')
+    conn = sqlite3.connect('init.db')
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS reviews (
