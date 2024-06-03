@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from book_search import search_books, search_books_by_category
@@ -26,6 +27,10 @@ with app.app_context():
 @app.route('/')
 def home():
     return render_template('user.html')
+
+@app.route('/')
+def about():
+    return render_template('about.html')
 
 @app.route('/modern')
 def modern():
