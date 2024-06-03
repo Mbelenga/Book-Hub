@@ -64,6 +64,10 @@ def category(category_name):
 def reviews():
     return render_template('reviews.html')
 
+@app.route('/my_reviews')
+def my_reviews():
+    return render_template('my_reviews.html')
+
 @app.route('/search', methods=['POST'])
 def search():
     query = request.json.get('query')
