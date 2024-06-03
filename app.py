@@ -60,11 +60,6 @@ def category(category_name):
     ]
     return render_template('category_books.html', books=formatted_books, category=category_name)
 
-def get_db_connection():
-    conn = sqlite3.connect('init.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
     if request.method == 'POST':
@@ -81,19 +76,6 @@ def reviews():
         reviews = cursor.fetchall()
         conn.close()
         return render_template('reviews.html', reviews=reviews)
-
-@app.route('/submit_review', methods=['POST'])
-def submit_review():
-    review_content = request.form['review']
-    
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('INSERT INTO reviews (review) VALUES (?)', (review_content,))
-    conn.commit()
-    conn.close()
-    
-    flash('Review submitted successfully!')
-    return redirect(url_for('reviews'))
 
 @app.route('/my_reviews')
 def my_reviews():
