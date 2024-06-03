@@ -28,7 +28,7 @@ with app.app_context():
 def home():
     return render_template('user.html')
 
-@app.route('/')
+@app.route('/about')
 def about():
     return render_template('about.html')
 
