@@ -31,7 +31,7 @@ class Review(db.Model):
 
 # Create the database and the table(s)
 with app.app_context():
-db.create_all()
+    db.create_all()
 
 @app.route('/')
 def home():
