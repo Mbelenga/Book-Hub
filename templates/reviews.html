@@ -62,7 +62,7 @@
             {% endif %}
         {% endwith %}
         
-	<!-- <form action="{{ url_for('submit_review') }}" method="POST"> -->
+	<!-- <form action="{{ url_for('submit_review') }}" method="POST">
             <textarea name="review" placeholder="Write your review here..."></textarea>
             <button type="submit">Submit</button>
         </form>
@@ -72,6 +72,6 @@
             {% for review in reviews %}
                 <li>{{ review['timestamp'] }} - {{ review['review'] }}</li>
             {% endfor %}
-        </ul>
+	</ul>-->
 </body>
 </html>
