@@ -62,20 +62,7 @@ def category(category_name):
 
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
-    if request.method == 'POST':
-        review_content = request.form['review']
-        new_review = Review(review_content=review_content)
-        db.session.add(new_review)
-        db.session.commit()
-        flash('Review submitted successfully!')
-        return redirect(url_for('reviews'))
-    else:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM reviews')
-        reviews = cursor.fetchall()
-        conn.close()
-        return render_template('reviews.html', reviews=reviews)
+    return render_template('reviews.html')
 
 @app.route('/search', methods=['POST'])
 def search():
