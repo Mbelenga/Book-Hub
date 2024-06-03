@@ -25,6 +25,13 @@ class User(db.Model):
 with app.app_context():
     db.create_all()
 
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    review_content = db.Column(db.Text, nullable=False)
+
+# Create the database and the table(s)
+db.create_all()
+
 @app.route('/')
 def home():
     return render_template('user.html')
@@ -82,6 +89,19 @@ def reviews():
     reviews = cursor.fetchall()
     conn.close()
     return render_template('reviews.html', reviews=reviews)
+
+@app.route('/reviews', methods=['GET', 'POST'])
+def reviews():
+    if request.method == 'POST':
+        review_content = request.form['review']
+        new_review = Review(review_content=review_content)
+        db.session.add(new_review)
+        db.session.commit()
+        flash('Review submitted successfully!')
+        return redirect(url_for('reviews'))
+    else:
+        reviews = Review.query.all()
+        return render_template('reviews.html', reviews=reviews)
 
 @app.route('/submit_review', methods=['POST'])
 def submit_review():
