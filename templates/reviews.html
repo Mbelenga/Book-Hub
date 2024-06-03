@@ -51,27 +51,5 @@
     </section>
     <body>
         <h1>Reviews</h1>
-        
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="flash-message">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        
-	<!-- <form action="{{ url_for('submit_review') }}" method="POST">
-            <textarea name="review" placeholder="Write your review here..."></textarea>
-            <button type="submit">Submit</button>
-        </form>
-    
-        <h2>All Reviews</h2>
-        <ul>
-            {% for review in reviews %}
-                <li>{{ review['timestamp'] }} - {{ review['review'] }}</li>
-            {% endfor %}
-	</ul>-->
-</body>
+<body/>
 </html>
