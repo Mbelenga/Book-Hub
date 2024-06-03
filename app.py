@@ -30,6 +30,7 @@ class Review(db.Model):
     review_content = db.Column(db.Text, nullable=False)
 
 # Create the database and the table(s)
+with app.app_context():
 db.create_all()
 
 @app.route('/')
