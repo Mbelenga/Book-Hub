@@ -65,19 +65,6 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-def init_db():
-    conn = sqlite3.connect('init.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS reviews (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            review TEXT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews():
     if request.method == 'POST':
