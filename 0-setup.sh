@@ -25,7 +25,7 @@ sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 sudo chown -R ubuntu:ubuntu /data/
 
 #Update nginx
-sudo sed -i "261 \\\tlocation /hbnb_static/ {\n\t\mbelenga /data/web_static/current/;\n\t}\n" /etc/nginx/sites-available/default
+sudo sed -i "261 \\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n" /etc/nginx/sites-available/default
 
 # Restart nginx to apply chandes
 sudo service nginx restart
