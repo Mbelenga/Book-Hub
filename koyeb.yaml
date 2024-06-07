@@ -1,0 +1,12 @@
+name: book-hub
+services:
+  - name: web
+    type: docker
+    description: "My Book Hub service"
+    dockerfile: ./Dockerfile
+    env:
+      - key: NODE_ENV
+        value: production
+    ports:
+      - port: 80
+        protocol: http
