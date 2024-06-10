@@ -83,44 +83,33 @@ def search():
     ]
     return jsonify(books=formatted_books)
 
-
-
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        user = User.query.filter_by(email=email).first()
-        if user:
-            flash('Email address already exists')
-            return redirect(url_for('signup'))
-
-        new_user = User(name=name, email=email, password=generate_password_hash(password, method='sha256'))
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('Account created successfully, please log in.')
-        return redirect(url_for('login'))
+        username = request.form['username']
+        password = request.form['password']
+        
+        if username in users:
+            return 'Username already exists. Please choose another.'
+        
+        users[username] = {'password': generate_password_hash(password)}
+        session['username'] = username
+        return redirect(url_for('user_page'))
     
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        user = User.query.filter_by(email=email).first()
-        if not user or not check_password_hash(user.password, password):
-            flash('Please check your login details and try again.')
-            return redirect(url_for('login'))
+        username = request.form['username']
+        password = request.form['password']
         
-        session['user_id'] = user.id
-        session['user_name'] = user.name
-        flash('Successfully logged in!')
-        return redirect(url_for('home'))
+        user = users.get(username)
+        if user and check_password_hash(user['password'], password):
+            session['username'] = username
+            return redirect(url_for('user_page'))
+        else:
+            return 'Invalid credentials. Please try again.'
     
     return render_template('login.html')
 
