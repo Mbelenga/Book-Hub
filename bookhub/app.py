@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 import sqlite3
-
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from book_search import search_books, search_books_by_category
@@ -31,7 +30,7 @@ class Review(db.Model):
 
 @app.route('/')
 def home():
-    return render_template('login.html')
+    return redirect(url_for('login'))
 
 @app.route('/about')
 def about():
@@ -86,39 +85,48 @@ def search():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username']
+        name = request.form['name']
+        email = request.form['email']
         password = request.form['password']
+
+        # Check if the email already exists
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            flash('Email already exists. Please choose another.', 'error')
+            return redirect(url_for('signup'))
+
+        hashed_password = generate_password_hash(password)
+        new_user = User(name=name, email=email, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
         
-        if username in users:
-            return 'Username already exists. Please choose another.'
-        
-        users[username] = {'password': generate_password_hash(password)}
-        session['username'] = username
+        session['user_id'] = new_user.id
+        session['user_name'] = new_user.name
         return redirect(url_for('user_page'))
     
     return render_template('signup.html')
 
-@app.route('/user')
-def user_page():
-    if 'username' in session:
-        return render_template('user.html', username=session['username'])
-    else:
-        return redirect(url_for('login'))
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
-        
-        user = users.get(username)
-        if user and check_password_hash(user['password'], password):
-            session['username'] = username
+
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            session['user_name'] = user.name
             return redirect(url_for('user_page'))
         else:
-            return 'Invalid credentials. Please try again.'
+            flash('Invalid email or password. Please try again.', 'error')
     
     return render_template('login.html')
+
+@app.route('/user')
+def user_page():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('user.html', username=session['user_name'])
 
 @app.route('/logout')
 def logout():

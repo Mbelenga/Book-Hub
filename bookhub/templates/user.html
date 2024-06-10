@@ -68,45 +68,24 @@
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>
-           <!-- <div class="profile-icon" onclick="toggleAuthModal()">
-                <i class="fas fa-user-circle"></i>
-                <span class="tooltip">Log In / Sign Up</span>
-	   </div> -->
             <nav>
                 <a href="{{ url_for('categories') }}"><i class="fas fa-th"></i> Categories</a>
                 <a href="{{ url_for('reviews') }}"><i class="fas fa-comment"></i> Reviews</a>
-		<a href="{{ url_for('about') }}"><i class="fas fa-comment"></i> About</a>
+                <a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About</a>
+                <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </nav>
         </div>
     </header>
 
     <section class="hero">
         <div class="container">
-            <h1>Welcome to Book Hub</h1>
+            <h1>Welcome, {{ username }}</h1>
         </div>
     </section>
 
     <section class="book-list" id="bookList">
         <!-- Book items will be dynamically inserted here -->
     </section>
-
-   <!-- <section class="new-releases" id="new-releases">
-        <h2>New Releases</h2>
-        <div class="book-list">
-            {% for book in new_releases %}
-            <div class="book">
-                <h2>{{ book.title }}</h2>
-                <p>{{ ', '.join(book.authors) }}</p>
-                <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
-                <button onclick="toggleDescription('{{ book.id }}')">More Info</button>
-                <div class="book-description" id="desc-{{ book.id }}">
-                    <p>{{ book.description }}</p>
-                    <a href="{{ book.previewLink }}" target="_blank">Read Preview</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-   </section> -->
 
     <script>
         document.getElementById('searchForm').addEventListener('submit', function(event) {
