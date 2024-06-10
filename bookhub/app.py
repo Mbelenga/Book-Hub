@@ -33,10 +33,6 @@ class Review(db.Model):
 def home():
     return redirect(url_for('login'))
 
-@app.route('/')
-def home():
-    return render_template('user.html')
-
 @app.route('/about')
 def about():
     return render_template('about.html')
