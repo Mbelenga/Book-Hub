@@ -28,9 +28,9 @@ class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     review_content = db.Column(db.Text, nullable=False)
 
-@app.route('/login')
+@app.route('/')
 def home():
-    return render_template('login.html')
+    return render_template('user')
 
 @app.route('/about')
 def about():
