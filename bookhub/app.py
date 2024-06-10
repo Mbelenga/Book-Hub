@@ -31,6 +31,10 @@ class Review(db.Model):
 
 @app.route('/')
 def home():
+    return redirect(url_for('login'))
+
+@app.route('/')
+def home():
     return render_template('user.html')
 
 @app.route('/about')
@@ -97,6 +101,13 @@ def signup():
         return redirect(url_for('user_page'))
     
     return render_template('signup.html')
+
+@app.route('/user')
+def user_page():
+    if 'username' in session:
+        return render_template('user.html', username=session['username'])
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
