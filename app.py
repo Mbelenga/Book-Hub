@@ -30,7 +30,7 @@ class Review(db.Model):
 
 @app.route('/')
 def home():
-    return render_template('user.html')
+    return redirect(url_for('login'))
 
 @app.route('/about')
 def about():
