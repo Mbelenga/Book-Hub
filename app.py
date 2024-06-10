@@ -36,9 +36,9 @@ def home():
 def about():
     return render_template('about.html')
 
-@app.route('/modern')
+@app.route('/login')
 def modern():
-    return render_template('modern.html')
+    return render_template('login.html')
 
 @app.route('/categories')
 def categories():
